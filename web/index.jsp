@@ -63,9 +63,13 @@
     <script type="text/javascript">
         // 1. 页面加载完成之后 直接发送一个ajax请求 要到分页数据
         $(function () {
+            to_page(1);
+        });
+
+        function to_page(pn){
             $.ajax({
                 url: "emps",
-                data: "pn=1",
+                data: "pn="+pn,
                 type: "get",
                 success: function (result) {
                     // console.log(result)
@@ -77,9 +81,11 @@
                     build_page_info(result)
                 }
             });
-        });
+        }
 
         function build_emps_table(result) {
+            // 清空table表格
+            $("#emps_table tbody").empty();
             var emps = result.extend.pageInfo.list;
             $.each(emps, function (index, item) {
                 var empId = $("<td></td>").append(item.empId);
@@ -111,6 +117,7 @@
 
         //解析显示分页信息
         function build_page_info(result) {
+            // $("#page_info_area").empty();
             //当前页数
             $("#pageNum").text(result.extend.pageInfo.pageNum)
             //总页数
@@ -121,7 +128,54 @@
 
         //解析显示分页条
         function build_page_nav(result) {
+            $("#page_nav_area").empty();
+            var ul = $("<ul></ul>").addClass("pagination");
 
+            var firstPageLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append("首页").attr("href", "#"));
+            var prePageLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append("&laquo;"));
+            if (result.extend.pageInfo.hasPreviousPage == false){
+                firstPageLi.addClass("disabled");
+                prePageLi.addClass("disabled");
+            }else {
+                firstPageLi.click(function (){
+                    to_page(1);
+                });
+                prePageLi.click(function (){
+                    to_page(result.extend.pageInfo.pageNum - 1);
+                });
+            }
+
+
+            var nextPageLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append("&raquo;"));
+            var lastPageLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append("末页").attr("href", "#"));
+            if (result.extend.pageInfo.hasNextPage == false){
+                nextPageLi.addClass("disabled");
+                lastPageLi.addClass("disabled");
+            }else {
+                nextPageLi.click(function (){
+                    to_page(result.extend.pageInfo.pageNum + 1);
+                });
+                lastPageLi.click(function (){
+                    to_page(result.extend.pageInfo.pages);
+                });
+            }
+
+            ul.append(firstPageLi).append(prePageLi);
+            $.each(result.extend.pageInfo.navigatepageNums, function (index, item){
+
+                var numLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append(item));
+                if (result.extend.pageInfo.pageNum == item){
+                    numLi.addClass("active");
+                }
+                numLi.click(function (){
+                    to_page(item);
+                });
+                ul.append(numLi);
+            });
+            ul.append(nextPageLi).append(lastPageLi);
+
+            var navEle = $("<nav></nav>").append(ul);
+            navEle.appendTo("#page_nav_area");
         }
     </script>
 </div>
