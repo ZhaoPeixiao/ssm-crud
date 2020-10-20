@@ -20,7 +20,7 @@
     </context:component-scan>
 
     <!-- 引入配置文件dbconfig.properties -->
-    <context:property-placeholder location="dbconfig.properties"/>
+    <context:property-placeholder location="classpath:dbconfig.properties"/>
     <!-- 配置数据源 -->
     <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dataSource">
         <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
@@ -33,7 +33,7 @@
     <!--配置SqlSessionFactory工厂-->
     <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sessionFactory">
         <!-- 指定mybatis全局配置文件的位置 -->
-        <property name="configLocation" value="mybatis-config.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
         <!-- 指定数据源 -->
         <property name="dataSource" ref="dataSource"/>
         <!-- 指定映射文件的位置 -->

@@ -44,14 +44,14 @@ public class MapperTest {
 
 //        employeeMapper.insertSelective(new Employee(null, "Jerry", "M", "jerry@mail.com", 1));
 
-        EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
-        for (int i = 0; i < 1000; i ++){
-            String uid = UUID.randomUUID().toString().substring(0, 5) + i;
-            String email = uid + "@mail.com";
-            String gender = Math.random() > 0.5 ? "M" : "F";
-            mapper.insertSelective(new Employee(null, uid, gender, email, 1));
-        }
-        System.out.println("Success!");
+//        EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+//        for (int i = 0; i < 1000; i ++){
+//            String uid = UUID.randomUUID().toString().substring(0, 5) + i;
+//            String email = uid + "@mail.com";
+//            String gender = Math.random() > 0.5 ? "M" : "F";
+//            mapper.insertSelective(new Employee(null, uid, gender, email, 1));
+//        }
+//        System.out.println("Success!");
 
     }
 }

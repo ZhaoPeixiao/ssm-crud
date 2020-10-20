@@ -6,10 +6,18 @@
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
-    
+
     <typeAliases>
         <package name="com.peixiao.bean"/>
     </typeAliases>
+
+    <plugins>
+        <!-- com.github.pagehelper为PageHelper类所在包名 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--参数合理化 当pageNum<=0 时会查询第一页 -->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
 
 
 </configuration>
