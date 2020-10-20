@@ -3,12 +3,14 @@ package com.peixiao.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.peixiao.bean.Employee;
+import com.peixiao.bean.Msg;
 import com.peixiao.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -24,10 +26,11 @@ public class EmployeeController {
 
     /**
      * 查询员工数据(分页查询)
+     *
      * @return jsp
      */
-    @RequestMapping("/emps")
-    public String getEmps(@RequestParam(value = "pn", defaultValue = "1") Integer pn, Model model){
+//    @RequestMapping("/emps")
+    public String getEmps(@RequestParam(value = "pn", defaultValue = "1") Integer pn, Model model) {
         // 这不是分页查询
         // 引入PageHelper
         PageHelper.startPage(pn, 5);
@@ -37,4 +40,22 @@ public class EmployeeController {
 
         return "list";
     }
+
+    /**
+     * 导入jackson包
+     *
+     * @param pn
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/emps")
+    public Msg getEmpsWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn) {
+        PageHelper.startPage(pn, 5);
+        List<Employee> employees = employeeService.getAll();
+        PageInfo pageInfo = new PageInfo(employees, 5);
+        List<Employee> employeesResult = pageInfo.getList();
+
+        return Msg.success().add("pageInfo", pageInfo);
+    }
+
 }

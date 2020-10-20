@@ -36,6 +36,12 @@
           <element id="library" level="project" name="Maven: javax.validation:validation-api:2.0.1.Final" />
           <element id="library" level="project" name="Maven: com.github.pagehelper:pagehelper:5.2.0" />
           <element id="library" level="project" name="Maven: com.github.jsqlparser:jsqlparser:3.2" />
+          <element id="library" level="project" name="Maven: org.webjars:bootstrap:4.5.3" />
+          <element id="library" level="project" name="Maven: org.webjars:jquery:3.5.1" />
+          <element id="library" level="project" name="Maven: org.webjars:popper.js:1.16.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.11.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.11.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.11.3" />
         </element>
       </element>
     </root>
