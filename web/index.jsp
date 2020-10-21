@@ -17,6 +17,65 @@
 
 </head>
 <body>
+
+<!-- 员工添加的模态框 -->
+<div class="modal fade" id="empAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">员工添加</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">员工姓名</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="empName" id="empName_add_input"
+                                   placeholder="张三">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">邮箱</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" name="email" id="empEmail_add_input"
+                                   placeholder="email@163.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">性别</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" name="gender" id="empGender_add_radio_M" value="M"
+                                       checked="checked"> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="gender" id="empGender_add_radio_F" value="F"> 女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">部门</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="dId">
+
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="emp_save_btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -25,7 +84,7 @@
     </div>
     <div class="row">
         <div class="col-md-4 col-md-offset-8">
-            <button class="btn btn-primary">新增</button>
+            <button class="btn btn-primary" id="emp_add_modal_btn">新增</button>
             <button class="btn btn-danger">删除</button>
         </div>
     </div>
@@ -50,12 +109,12 @@
     </div>
     <div class="row">
 
-<%--        分页文字信息--%>
+        <%--        分页文字信息--%>
         <div class="col-md-6" id="page_info_area">
             当前第<code id="pageNum">1</code>页,总共<code id="pages">1</code>页,总共<code id="total">1</code>条记录
         </div>
 
-<%--       分页条信息--%>
+        <%--       分页条信息--%>
         <div class="col-md-6" id="page_nav_area">
 
         </div>
@@ -66,10 +125,10 @@
             to_page(1);
         });
 
-        function to_page(pn){
+        function to_page(pn) {
             $.ajax({
                 url: "emps",
-                data: "pn="+pn,
+                data: "pn=" + pn,
                 type: "get",
                 success: function (result) {
                     // console.log(result)
@@ -133,14 +192,14 @@
 
             var firstPageLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append("首页").attr("href", "#"));
             var prePageLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append("&laquo;"));
-            if (result.extend.pageInfo.hasPreviousPage == false){
+            if (result.extend.pageInfo.hasPreviousPage == false) {
                 firstPageLi.addClass("disabled");
                 prePageLi.addClass("disabled");
-            }else {
-                firstPageLi.click(function (){
+            } else {
+                firstPageLi.click(function () {
                     to_page(1);
                 });
-                prePageLi.click(function (){
+                prePageLi.click(function () {
                     to_page(result.extend.pageInfo.pageNum - 1);
                 });
             }
@@ -148,26 +207,26 @@
 
             var nextPageLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append("&raquo;"));
             var lastPageLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append("末页").attr("href", "#"));
-            if (result.extend.pageInfo.hasNextPage == false){
+            if (result.extend.pageInfo.hasNextPage == false) {
                 nextPageLi.addClass("disabled");
                 lastPageLi.addClass("disabled");
-            }else {
-                nextPageLi.click(function (){
+            } else {
+                nextPageLi.click(function () {
                     to_page(result.extend.pageInfo.pageNum + 1);
                 });
-                lastPageLi.click(function (){
+                lastPageLi.click(function () {
                     to_page(result.extend.pageInfo.pages);
                 });
             }
 
             ul.append(firstPageLi).append(prePageLi);
-            $.each(result.extend.pageInfo.navigatepageNums, function (index, item){
+            $.each(result.extend.pageInfo.navigatepageNums, function (index, item) {
 
                 var numLi = $("<li></li>").addClass("page-item").append($("<a></a>").addClass("page-link").append(item));
-                if (result.extend.pageInfo.pageNum == item){
+                if (result.extend.pageInfo.pageNum == item) {
                     numLi.addClass("active");
                 }
-                numLi.click(function (){
+                numLi.click(function () {
                     to_page(item);
                 });
                 ul.append(numLi);
@@ -177,6 +236,51 @@
             var navEle = $("<nav></nav>").append(ul);
             navEle.appendTo("#page_nav_area");
         }
+
+        // 点击新增按钮弹出模态窗
+        $("#emp_add_modal_btn").click(function () {
+            // 发送ajax请求 查出部门信息 显示在下拉列表
+            getDepts();
+
+            $("#empAddModal").modal({
+                backdrop: "static"
+            })
+        });
+
+        // 查出所有部门信息
+        function getDepts() {
+            $.ajax({
+                url: "depts",
+                type: "GET",
+                success: function (result) {
+                    console.log(result)
+                    // $("#empAddModal select").append("")
+                    $.each(result.extend.departments, function () {
+                        var optionEle = $("<option></option>").append(this.deptName).attr("value", this.deptId);
+                        optionEle.appendTo("#empAddModal select");
+                    });
+                }
+            });
+        }
+
+        $("#emp_save_btn").click(function () {
+            // 1. 将模态框中填写的数据提交给服务器进行保存
+            $.ajax({
+                url: "emp",
+                type: "POST",
+                data: $("#empAddModal form").serialize(),
+                success: function (result) {
+                    // alert(result.msg);
+                    // 1. 关闭模态框
+                    $("#empAddModal").modal('hide');
+                    // 2. 来到最后一页 显示刚才保存的数据
+                    // 发送ajax请求显示最后一页
+                    to_page($("#pages").text() + 1);
+                    alert(result.msg);
+                }
+            });
+        });
+
     </script>
 </div>
 

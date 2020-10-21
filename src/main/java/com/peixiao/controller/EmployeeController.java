@@ -8,9 +8,7 @@ import com.peixiao.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -56,6 +54,14 @@ public class EmployeeController {
         List<Employee> employeesResult = pageInfo.getList();
 
         return Msg.success().add("pageInfo", pageInfo);
+    }
+
+
+    @PostMapping("/emp")
+    @ResponseBody
+    public Msg saveEmp(Employee employee){
+        employeeService.saveEmp(employee);
+        return Msg.success();
     }
 
 }
