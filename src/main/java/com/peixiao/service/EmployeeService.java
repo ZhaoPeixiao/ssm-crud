@@ -1,6 +1,7 @@
 package com.peixiao.service;
 
 import com.peixiao.bean.Employee;
+import com.peixiao.bean.EmployeeExample;
 import com.peixiao.dao.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,4 +35,16 @@ public class EmployeeService {
     }
 
 
+    /**
+     * 检验用户名是否可用
+     * @param empName 用户名
+     * @return true 代表可用
+     */
+    public boolean checkUser(String empName) {
+        EmployeeExample example = new EmployeeExample();
+        EmployeeExample.Criteria criteria = example.createCriteria();
+        criteria.andEmpNameEqualTo(empName);
+        long l = employeeMapper.countByExample(example);
+        return l == 0;
+    }
 }

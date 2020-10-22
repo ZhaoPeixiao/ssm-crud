@@ -64,4 +64,15 @@ public class EmployeeController {
         return Msg.success();
     }
 
+    @ResponseBody
+    @RequestMapping("/checkEmp")
+    public Msg checkUser(@RequestParam("empName") String empName){
+        boolean result = employeeService.checkUser(empName);
+        if (result){
+            return Msg.success();
+        }else{
+            return Msg.fail();
+        }
+    }
+
 }
