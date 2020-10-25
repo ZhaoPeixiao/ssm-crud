@@ -2,10 +2,12 @@ package com.peixiao.service;
 
 import com.peixiao.bean.Employee;
 import com.peixiao.bean.EmployeeExample;
+import com.peixiao.bean.Msg;
 import com.peixiao.dao.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,36 +17,78 @@ import java.util.List;
 @Service
 public class EmployeeService {
 
-    @Autowired
-    EmployeeMapper employeeMapper;
+    public void deleteBatch(List<Integer> ids) {
+        EmployeeExample example = new EmployeeExample();
+        EmployeeExample.Criteria criteria = example.createCriteria();
+        criteria.andEmpIdIn(ids);
+        employeeMapper.deleteByExample(example);
+    }
 
-    /**
-     * 查询所有员工
-     * @return list
-     */
-    public List<Employee> getAll() {
+    enum EmpType {
+        empId, empName, email, gender, dId
+    }
+
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
+    public List<Employee> getAll(){
         return employeeMapper.selectByExampleWithDept(null);
     }
 
-    /**
-     * 员工保存
-     * @param employee 员工
-     */
-    public void saveEmp(Employee employee) {
+    public Employee getEmp(Integer id) {
+        return employeeMapper.selectByPrimaryKey(id);
+    }
+
+    public void saveEmp(Employee employee){
         employeeMapper.insertSelective(employee);
     }
 
+    public void updateEmp(Employee employee) {
+        employeeMapper.updateByPrimaryKeySelective(employee);
+    }
 
-    /**
-     * 检验用户名是否可用
-     * @param empName 用户名
-     * @return true 代表可用
-     */
-    public boolean checkUser(String empName) {
+    public void deleteEmp(Integer id) {
+        employeeMapper.deleteByPrimaryKey(id);
+    }
+
+    public List<Msg> checkEmp(Employee emp) {
+        List<Msg> result =new ArrayList<Msg>();
+        if(emp.getEmpName() != null){
+            if (isNotHas(EmpType.empName,emp.getEmpName()))
+                result.add(Msg.success());
+            else
+                result.add(Msg.fail().add("error",EmpType.empName.toString()));
+        }
+        if (emp.getEmail() != null){
+            if (isNotHas(EmpType.email,emp.getEmail()))
+                result.add(Msg.success());
+            else
+                result.add(Msg.fail().add("error",EmpType.email.toString()));
+        }
+        return result;
+    }
+
+    public boolean isNotHas(EmpType type,Object value){
         EmployeeExample example = new EmployeeExample();
         EmployeeExample.Criteria criteria = example.createCriteria();
-        criteria.andEmpNameEqualTo(empName);
-        long l = employeeMapper.countByExample(example);
-        return l == 0;
+        switch (type) {
+            case empId:
+                criteria.andEmpIdEqualTo((Integer) value);
+                break;
+            case empName:
+                criteria.andEmpNameEqualTo((String) value);
+                break;
+            case email:
+                criteria.andEmailEqualTo((String) value);
+                break;
+            case gender:
+                criteria.andGenderEqualTo((String) value);
+                break;
+            case dId:
+                criteria.andDIdEqualTo((Integer) value);
+                break;
+        }
+        long count = employeeMapper.countByExample(example);
+        return count == 0;
     }
 }
